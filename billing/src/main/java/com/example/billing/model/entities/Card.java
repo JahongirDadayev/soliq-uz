@@ -31,13 +31,18 @@ public class Card extends BaseEntity {
     @Column(name = "expire_date", nullable = false)
     private LocalDate expireDate;
 
+    @Builder.Default
     @Column(name = "balance", nullable = false)
     private Double balance = 0.0;
 
     @Column(name = "holder_name", nullable = false)
     private String holderName;
 
+    @Builder.Default
     @Column(name = "status", nullable = false)
     private CardStatus status = CardStatus.ACTIVE;
+
+    @Column(name = "deleted", nullable = false)
+    private Boolean deleted;
 
 }

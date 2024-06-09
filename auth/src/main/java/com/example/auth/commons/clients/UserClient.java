@@ -14,7 +14,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.UUID;
 
-@FeignClient(name = "user", path = "/api/v1/user", configuration = ClientConfiguration.class)
+import static com.example.auth.commons.constants.RestConstants.BASE_URL;
+import static com.example.auth.commons.constants.RestConstants.USER;
+
+@FeignClient(name = "user", path = BASE_URL + USER, configuration = ClientConfiguration.class)
 public interface UserClient {
 
     @GetMapping(path = "/for-services")

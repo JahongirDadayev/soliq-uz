@@ -31,6 +31,6 @@ public class User extends BaseDTO {
 
     private UserStatus status;
 
-    private boolean deleted;
+    private Boolean deleted;
 
 }

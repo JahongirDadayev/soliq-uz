@@ -16,8 +16,6 @@ public class PaginationRequest {
 
     private int size = 20;
 
-    private String search = "";
-
     public int getPage() {
         return Math.max(page, 0);
     }

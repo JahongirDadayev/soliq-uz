@@ -1,6 +1,7 @@
 package com.example.user.commons.exception;
 
 import com.example.user.model.dtos.base.Header;
+import feign.FeignException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -28,4 +29,12 @@ public class CustomExceptionHandler {
         log.error("Handled Exception {0}", exception);
         return Header.error(Objects.requireNonNull(exception.getFieldError()).getDefaultMessage());
     }
+
+    @ExceptionHandler(FeignException.class)
+    @ResponseStatus(HttpStatus.SERVICE_UNAVAILABLE)
+    public Header<?> handleFeignStatusException(FeignException exception) {
+        log.error("Handled Feign Exception: {}", exception.getMessage(), exception);
+        return Header.error(exception.getMessage());
+    }
+
 }

@@ -1,7 +1,14 @@
 package com.example.auth.commons.constants;
 
-public interface RestConstants {
-    String BASE_URL = "/api/v1";
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
-    String USER_BASE_URL = "http://user";
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+public class RestConstants {
+    public static final String BASE_URL = "/api/v1";
+
+    public static final String USER = "/user";
+
+    public static final String AUTH = "/auth";
+
 }

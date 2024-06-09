@@ -16,8 +16,8 @@ public class JwtService {
     @Value(value = "${security.jwt.token.secret-key}")
     private String securityKey;
 
-    public boolean isTokenValid(String token) {
-        return !extractClaim(token, Claims::getExpiration).before(new Date());
+    public boolean isTokenInvalid(String token) {
+        return extractClaim(token, Claims::getExpiration).before(new Date());
     }
 
     public String extractUsername(String token) {

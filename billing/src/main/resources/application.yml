@@ -25,3 +25,6 @@ spring:
         format_sql: true
     database: postgresql
     database-platform: org.hibernate.dialect.PostgreSQLDialect
+
+security:
+  internal-username: internaluser@gmail.com

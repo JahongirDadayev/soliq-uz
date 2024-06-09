@@ -2,7 +2,6 @@ package com.example.gateway.filter;
 
 import com.example.gateway.constants.RouterValidator;
 import com.example.gateway.service.JwtService;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
@@ -23,8 +22,6 @@ public class AuthenticationFilter implements GatewayFilter {
 
     private final JwtService jwtService;
 
-    private final ObjectMapper objectMapper;
-
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
         ServerHttpRequest request = exchange.getRequest();
@@ -34,7 +31,7 @@ public class AuthenticationFilter implements GatewayFilter {
                 return this.onError(exchange);
             }
             final String token = this.getAuthHeader(request);
-            if (jwtService.isTokenValid(token)) {
+            if (jwtService.isTokenInvalid(token)) {
                 return this.onError(exchange);
             }
             this.populateRequestWithHeaders(exchange, token);
@@ -49,7 +46,7 @@ public class AuthenticationFilter implements GatewayFilter {
     }
 
     private String getAuthHeader(ServerHttpRequest request) {
-        return request.getHeaders().getOrEmpty(HttpHeaders.AUTHORIZATION).get(0);
+        return request.getHeaders().getOrEmpty(HttpHeaders.AUTHORIZATION).get(0).replace("Bearer ", "");
     }
 
     private boolean isAuthMissing(ServerHttpRequest request) {
@@ -60,7 +57,7 @@ public class AuthenticationFilter implements GatewayFilter {
     private void populateRequestWithHeaders(ServerWebExchange exchange, String token) {
         String username = jwtService.extractUsername(token);
         exchange.getRequest().mutate()
-                .header("username", objectMapper.writeValueAsString(username))
+                .header("username", username)
                 .build();
     }
 

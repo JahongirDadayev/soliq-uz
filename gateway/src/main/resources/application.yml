@@ -22,10 +22,18 @@ spring:
           uri: lb://user
           predicates:
             - Path=/api/v1/user/**
-        - id: billing
+        - id: billing-card
           uri: lb://billing
           predicates:
-            - Path=/billing/**
+            - Path=/api/v1/card/**
+        - id: billing-operation
+          uri: lb://billing
+          predicates:
+            - Path=/api/v1/operation/**
+        - id: billing-transaction
+          uri: lb://billing
+          predicates:
+            - Path=/api/v1/transaction/**
 
 security:
   jwt:

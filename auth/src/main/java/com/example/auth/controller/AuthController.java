@@ -12,8 +12,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import static com.example.auth.commons.constants.RestConstants.AUTH;
+import static com.example.auth.commons.constants.RestConstants.BASE_URL;
+
 @RestController
-@RequestMapping(value = "/api/v1/auth")
+@RequestMapping(value = BASE_URL + AUTH)
 @RequiredArgsConstructor
 public class AuthController {
     private final AuthService authService;
