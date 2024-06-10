@@ -4,17 +4,17 @@ server:
 eureka:
   client:
     service-url:
-      defaultZone: http://localhost:8761/eureka
+      defaultZone: http://${DISCOVERY_HOST}:${DISCOVERY_PORT}/eureka
   instance:
-    ip-address: localhost
+    ip-address: ${DISCOVERY_HOST}
 
 spring:
   application:
     name: billing
   datasource:
-    url: jdbc:postgresql://localhost:5432/postgres
-    username: postgres
-    password: Jahongir2002
+    url: jdbc:postgresql://${DB_HOST}:${DB_PORT}/${DB}
+    username: ${DB_USER}
+    password: ${DB_PASSWORD}
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:

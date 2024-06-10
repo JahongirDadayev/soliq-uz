@@ -1,0 +1,113 @@
+version: '3'
+
+services:
+  #  Postgresql container
+  postgres-billing:
+    image: postgres:latest
+    container_name: postgres_billing
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: root1234
+      POSTGRES_DB: billing_db
+    ports:
+      - "5433:5432"
+    networks:
+      - soliq-bridge
+
+  postgres-user:
+    image: postgres:latest
+    container_name: postgres_user
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: root1234
+      POSTGRES_DB: user_db
+    ports:
+      - "5434:5432"
+    networks:
+      - soliq-bridge
+
+  # Auth Container
+  auth-service:
+    build: auth/
+    container_name: auth
+    depends_on:
+      - discovery-service
+    environment:
+      SERVER_TOMCAT_THREADS_MAX: 300
+      DISCOVERY_HOST: discovery
+      DISCOVERY_PORT: 8761
+      EMAIL_PASSWORD: Password
+    ports:
+      - "9899:9899"
+    networks:
+      - soliq-bridge
+
+  # Billing Container
+  billing-service:
+    build: billing/
+    container_name: billing
+    depends_on:
+      - postgres-billing
+      - discovery-service
+    environment:
+      SERVER_TOMCAT_THREADS_MAX: 300
+      DISCOVERY_HOST: discovery
+      DISCOVERY_PORT: 8761
+      DB_USER: postgres
+      DB_PASSWORD: root1234
+      DB: billing_db
+      DB_HOST: postgres_billing
+      DB_PORT: 5432
+    ports:
+      - "9898:9898"
+    networks:
+      - soliq-bridge
+
+  # Discovery Container
+  discovery-service:
+    build: discovery/
+    container_name: discovery
+    ports:
+      - "8761:8761"
+    networks:
+      - soliq-bridge
+
+  # Gateway Container
+  gateway-service:
+    build: gateway/
+    container_name: gateway
+    depends_on:
+      - discovery-service
+    environment:
+      SERVER_TOMCAT_THREADS_MAX: 300
+      DISCOVERY_HOST: discovery
+      DISCOVERY_PORT: 8761
+    ports:
+      - "8080:8080"
+    networks:
+      - soliq-bridge
+
+  # User Container
+  user-service:
+    build: user/
+    container_name: user
+    depends_on:
+      - postgres-user
+      - discovery-service
+    environment:
+      SERVER_TOMCAT_THREADS_MAX: 300
+      DISCOVERY_HOST: discovery
+      DISCOVERY_PORT: 8761
+      DB_USER: postgres
+      DB_PASSWORD: root1234
+      DB: user_db
+      DB_HOST: postgres_user
+      DB_PORT: 5432
+    ports:
+      - "9897:9897"
+    networks:
+      - soliq-bridge
+
+networks:
+  soliq-bridge:
+    driver: bridge

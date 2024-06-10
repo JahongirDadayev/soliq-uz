@@ -5,13 +5,13 @@ import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.nio.charset.StandardCharsets;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -35,7 +35,8 @@ public class EmailService {
     }
 
     private String getContentFromTemplate(String code, String subject, String message) throws IOException {
-        return Files.readString(Paths.get("auth/src/main/resources/email-templates/activate_account.html")).replace("CODE", code).replace("SUBJECT", subject).replace("MESSAGE", message);
+        ClassPathResource classPathResource = new ClassPathResource("email-templates/activate_account.html");
+        return classPathResource.getContentAsString(StandardCharsets.UTF_8).replace("CODE", code).replace("SUBJECT", subject).replace("MESSAGE", message);
     }
 
 }
